@@ -79,8 +79,8 @@ extern bool telnetReporting;
 int relay_pin 		= D1;		// wemos D1. LIght on or off (Garden lights)
 int relay_pin_pir 	= D2;		// wemos D2. LIght on or off (Garage Path)
 int OLFManualStatus = D3; 		// Manual over ride.  If low then lights held on manually
-int LIGHTSON 		= 0;
-int LIGHTSOFF 		= 1;
+int LIGHTSON 		= 1;
+int LIGHTSOFF 		= 0;
 int LIGHTSAUTO 		= 3; 		// Not using this at the moment
 
 bool bManMode = false; 			// true = Manual, false = automatic
@@ -252,6 +252,7 @@ void app_WD_on(void *cid)
 	if (coreServices.getWeekDayState() == 1)			// 1 means weekday : FIXTHIS : Why am I making this test is it necessary? 
 	{
 		digitalWrite(relay_pin, LIGHTSON);
+		//digitalWrite(relay_pin_pir, LIGHTSON);
 		msg = obj->getCntrlName() + ", WD ON";
 		mqttLog(msg.c_str(), REPORT_INFO, true, true);
 	}
@@ -270,6 +271,7 @@ void app_WD_off(void *cid)
 	if (coreServices.getWeekDayState() == 1)			// 1 means weekday : FIXTHIS : Why am I making this test is it necessary? 
 	{
 		digitalWrite(relay_pin, LIGHTSOFF);
+		//digitalWrite(relay_pin_pir, LIGHTSOFF);
 		msg = obj->getCntrlName() + ", WD OFF";
 		mqttLog(msg.c_str(), REPORT_INFO, true, true);
 	}
