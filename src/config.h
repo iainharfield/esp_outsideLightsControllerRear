@@ -14,4 +14,4 @@ String deviceType 	= "CNTRL";
 String app_id 		= "OLR"; 	
 
 const char *oh3CommandTrigger 	= "/house/cntrl/outside-lights-front/pir-command"; // Event fron the PIR detector (front porch: PIRON or PIROFF
-const char *oh3StateManual 		= "/house/cntrl/outside-lights-front/manual-state";	 // 	Status of the Manual control switch control MAN or AUTO
+const char *oh3StateManual 		= "/house/cntrl/outside-lights-rear/manual-state";	 // 	Status of the Manual control switch control MAN or AUTO
