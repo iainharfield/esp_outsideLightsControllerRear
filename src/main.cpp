@@ -252,9 +252,12 @@ void app_WD_on(void *cid)
 	if (coreServices.getWeekDayState() == 1)			// 1 means weekday : FIXTHIS : Why am I making this test is it necessary? 
 	{
 		digitalWrite(relay_pin, LIGHTSON);
-		//digitalWrite(relay_pin_pir, LIGHTSON);
+		cntrlStateOLF.setOutputState(1);
+		
 		msg = obj->getCntrlName() + ", WD ON";
 		mqttLog(msg.c_str(), REPORT_INFO, true, true);
+
+		mqttClient.publish(LightState, 0, true, "ON");		// QoS = 0
 	}
 	else
 	{
@@ -271,9 +274,12 @@ void app_WD_off(void *cid)
 	if (coreServices.getWeekDayState() == 1)			// 1 means weekday : FIXTHIS : Why am I making this test is it necessary? 
 	{
 		digitalWrite(relay_pin, LIGHTSOFF);
-		//digitalWrite(relay_pin_pir, LIGHTSOFF);
+		cntrlStateOLF.setOutputState(0);
+		
 		msg = obj->getCntrlName() + ", WD OFF";
 		mqttLog(msg.c_str(), REPORT_INFO, true, true);
+
+		mqttClient.publish(LightState, 0, true, "OFF");		// QoS = 0
 	}
 	else
 	{
@@ -290,8 +296,11 @@ void app_WE_on(void *cid)
 	if (coreServices.getWeekDayState() == 0)			// 0 means weekend : FIXTHIS : Why am I making this test is it necessary? 
 	{
 		digitalWrite(relay_pin, LIGHTSON);
+		cntrlStateOLF.setOutputState(1);
 		String msg = obj->getCntrlName() + ", WE ON";
 		mqttLog(msg.c_str(), REPORT_INFO, true, true);
+		
+		mqttClient.publish(LightState, 0, true, "ON");		// QoS = 0
 	}
 	else	
 	{
@@ -308,8 +317,12 @@ void app_WE_off(void *cid)
 	if (coreServices.getWeekDayState() == 0)			// 0 means weekend : FIXTHIS : Why am I making this test is it necessary? 
 	{
 		digitalWrite(relay_pin, LIGHTSOFF);
+		cntrlStateOLF.setOutputState(0);
+
 		String msg = obj->getCntrlName() + ", WE OFF";
 		mqttLog(msg.c_str(), REPORT_INFO, true, true);
+
+		mqttClient.publish(LightState, 0, true, "OFF");		// QoS = 0
 	}
 	else
 	{
