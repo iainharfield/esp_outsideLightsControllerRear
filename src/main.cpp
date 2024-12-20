@@ -197,6 +197,7 @@ bool onMqttMessageAppExt(char *topic, char *payload, const AsyncMqttClientMessag
 			return true;
 		}
 
+		/*
 		if (strcmp(mqtt_payload, "PIROFF") == 0)
 		{
 			//  Switch off unless manually held on by switch
@@ -208,6 +209,7 @@ bool onMqttMessageAppExt(char *topic, char *payload, const AsyncMqttClientMessag
 			//}
 			return true;
 		}
+		*/
 	}
 	return false;
 }
