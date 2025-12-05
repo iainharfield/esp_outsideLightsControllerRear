@@ -50,7 +50,7 @@ extern char ntptod[MAX_CFGSTR_LENGTH];
 // defined in cntrl.cpp
 //*************************************
 extern cntrlState *cntrlObjRef; // pointer to cntrlStateOLF
-cntrlState cntrlStateOLF;		// Create and set defaults
+cntrlState controlState;		// Create and set defaults
 
 ///#define WDCntlTimes "/house/cntrl/outside-lights-front/wd-control-times" // Times received from either UI or Python app
 ///#define WECntlTimes "/house/cntrl/outside-lights-front/we-control-times" // Times received from either UI or MySQL via Python app
@@ -122,9 +122,9 @@ void setup()
 
 	// this app is a contoller
 	// configure the MQTT topics for the Controller
-	cntrlStateOLF.setCntrlName((String)app_id);
-	cntrlStateOLF.setRefreshID(RefreshID);
-	cntrlStateOLF.setCntrlObjRef(cntrlStateOLF);
+	controlState.setCntrlName((String)app_id);
+	controlState.setRefreshID(RefreshID);
+	controlState.setCntrlObjRef(controlState);
 
 	// startCntrl();
 
@@ -163,7 +163,7 @@ void loop()
 		sprintf(logString, "%s,%s,%s,%s", ntptod, espDevice.getType().c_str(), espDevice.getName().c_str(), "Outside Lights Front manually held ON");
 		mqttLog(logString, REPORT_WARN, true, true);
 
-		app_WD_on(&cntrlStateOLF); // FIXTHIS WD or WE
+		app_WD_on(&controlState); // FIXTHIS WD or WE
 		mqttClient.publish(oh3StateManual, 1, true, "MAN");
 	}
 	else
@@ -237,13 +237,13 @@ void appMQTTTopicSubscribe()
 
 	mqttTopicsubscribe(oh3CommandTrigger, 2);
 
-	cntrlStateOLF.setWDCntrlTimesTopic(WDCntlTimes);
-	cntrlStateOLF.setWDUIcommandStateTopic(WDUICmdState);
-	cntrlStateOLF.setWDCntrlRunTimesStateTopic(runtimeState);
+	controlState.setWDCntrlTimesTopic(WDCntlTimes);
+	controlState.setWDUIcommandStateTopic(WDUICmdState);
+	controlState.setWDCntrlRunTimesStateTopic(runtimeState);
 
-	cntrlStateOLF.setWECntrlTimesTopic(WECntlTimes);
-	cntrlStateOLF.setWEUIcommandStateTopic(WEUICmdState);
-	cntrlStateOLF.setWECntrlRunTimesStateTopic(runtimeState);
+	controlState.setWECntrlTimesTopic(WECntlTimes);
+	controlState.setWEUIcommandStateTopic(WEUICmdState);
+	controlState.setWECntrlRunTimesStateTopic(runtimeState);
 }
 
 void app_WD_on(void *cid)
@@ -254,7 +254,7 @@ void app_WD_on(void *cid)
 	if (coreServices.getWeekDayState() == 1)			// 1 means weekday : FIXTHIS : Why am I making this test is it necessary? 
 	{
 		digitalWrite(relay_pin, LIGHTSON);
-		cntrlStateOLF.setOutputState(1);
+		controlState.setOutputState(1);
 		
 		msg = obj->getCntrlName() + ", WD ON";
 		mqttLog(msg.c_str(), REPORT_INFO, true, true);
@@ -276,7 +276,7 @@ void app_WD_off(void *cid)
 	if (coreServices.getWeekDayState() == 1)			// 1 means weekday : FIXTHIS : Why am I making this test is it necessary? 
 	{
 		digitalWrite(relay_pin, LIGHTSOFF);
-		cntrlStateOLF.setOutputState(0);
+		controlState.setOutputState(0);
 		
 		msg = obj->getCntrlName() + ", WD OFF";
 		mqttLog(msg.c_str(), REPORT_INFO, true, true);
@@ -298,7 +298,7 @@ void app_WE_on(void *cid)
 	if (coreServices.getWeekDayState() == 0)			// 0 means weekend : FIXTHIS : Why am I making this test is it necessary? 
 	{
 		digitalWrite(relay_pin, LIGHTSON);
-		cntrlStateOLF.setOutputState(1);
+		controlState.setOutputState(1);
 		String msg = obj->getCntrlName() + ", WE ON";
 		mqttLog(msg.c_str(), REPORT_INFO, true, true);
 		
@@ -319,7 +319,7 @@ void app_WE_off(void *cid)
 	if (coreServices.getWeekDayState() == 0)			// 0 means weekend : FIXTHIS : Why am I making this test is it necessary? 
 	{
 		digitalWrite(relay_pin, LIGHTSOFF);
-		cntrlStateOLF.setOutputState(0);
+		controlState.setOutputState(0);
 
 		String msg = obj->getCntrlName() + ", WE OFF";
 		mqttLog(msg.c_str(), REPORT_INFO, true, true);
@@ -369,16 +369,16 @@ void app_WE_auto(void *cid)
 
 void startTimesReceivedChecker()
 {
-	cntrlStateOLF.runTimeReceivedCheck();
+	controlState.runTimeReceivedCheck();
 }
 
 void processCntrlTOD_Ext()
 {
-	cntrlStateOLF.processCntrlTOD_Ext();
+	controlState.processCntrlTOD_Ext();
 }
 void telnet_extension_1(char c)
 {
-	cntrlStateOLF.telnet_extension_1(c);
+	controlState.telnet_extension_1(c);
 }
 // Process any application specific telnet commannds
 void telnet_extension_2(char c)
@@ -401,5 +401,5 @@ void telnet_extensionHelp(char c)
 
 bool onMqttMessageAppCntrlExt(char *topic, char *payload, const AsyncMqttClientMessageProperties &properties, const size_t &len, const size_t &index, const size_t &total)
 {
-	return cntrlStateOLF.onMqttMessageCntrlExt(topic, payload, properties, len, index, total);
+	return controlState.onMqttMessageCntrlExt(topic, payload, properties, len, index, total);
 }
